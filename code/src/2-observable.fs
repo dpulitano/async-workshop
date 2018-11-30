@@ -39,10 +39,11 @@ module Observable =
           // handler whenever either of the two source observables is triggered.
           // It should return a disposable function that disposes of both 
           // of the subscriptions to 'e1' and 'e2'. (The 'map' function below
-          // is a useful inspiration for how this might look.)          
-          window.alert("Not implemented!")
-          failwith "Not implemented!"
-          fun () -> () }
+          // is a useful inspiration for how this might look.)  
+          let handlerA = e1.AddHandler(h)
+          let handlerB = e2.AddHandler(h)
+          (fun () -> handlerA (); handlerB ())
+    }
   
   /// Creates a new observable that keeps a state. When the source
   /// observable happens, the state is updated using the specified 
@@ -66,9 +67,12 @@ module Observable =
   // because you need to call 'window.clearInterval' when the subscribtion is
   // cancelled (in the function you return)
   let interval ms = 
-    window.alert("Not implemented!")
-    failwith "Not implemented!"
-
+    let handler = fun () -> window.setInterval((fun () -> ()), ms)
+    { new IObservable<_> with
+      member x.AddHandler(h) = 
+        let pId = handler ()
+        fun () -> window.clearInterval(pId)
+    }
 
 module Async =
   /// Creates an asynchronous workflow that waits for the
@@ -163,5 +167,29 @@ let demo4 () =
   // and when 'Stop' happens, see what the colours are. Then you need to cancel
   // the subscription to 'slots' which will stop all animations.
   
+// answ:
+  let init = (("gray", "gray", "gray"), false)
+  let update((f,s,t), stopped) evt =
+    match evt with
+    | One c -> (c, s, t), stopped
+    | Two c -> (f, c, t), stopped
+    | Three c -> (f, s, c), stopped
+    | Stop -> (f, s, t), true
+
+  let switch = 
+    let mutable d = ignore 
+
+    slots 
+    |> Observable.scan init update
+    |> Observable.add (fun ((f, s, t), stopped) ->
+      Section3.light1.style.backgroundColor <- f
+      Section3.light2.style.backgroundColor <- s
+      Section3.light3.style.backgroundColor <- t
+      d <- 
+      )
+
+  Observable.on "click" Section3.start |> Observable.add (fun _ -> d; ()) slots
+  Observable.add()
+
   window.alert("Not implemented!")
   failwith "Not implemented!"

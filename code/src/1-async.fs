@@ -17,13 +17,11 @@ module Async =
   /// continuation after the specified number of milliseconds
   let sleep n =
     { new Async<unit> with
-        member x.Start(f) = 
+        member x.Start(f) = window.setTimeout(f, n) |> ignore
           // TASK #1: Implement the 'Start' operation! It should use 
           // 'window.setTimeout' to sleep for 'n' milliseconds and then 
           // call 'f'. Note that 'window.setTimeout' in JavaScript 
           // returns ID of the created timer - you need to 'ignore' that!
-          window.alert("Not implemented!")
-          failwith "Not implemented!"
     }
 
   
@@ -31,9 +29,12 @@ module Async =
   // like the 'sleep' function, but waits until the specified event of
   // a given HTMLElement happens.
   let awaitEvent (el:HTMLElement) (evt:string) = 
-    window.alert("Not implemented!")
-    failwith "Not implemented!"
-
+    let listener f = EventListenerOrEventListenerObject.Case1(fun _ -> f ())
+    { new Async<unit> with
+        member x.Start(f) = 
+          el.removeEventListener(evt, listener f)
+          el.addEventListener(evt, listener f)
+    }
 
   /// Creates a computation that composes 'a' with the result of 'f'
   let bind (f:'a -> Async<'b>) (a:Async<'a>) : Async<'b> = 
@@ -93,10 +94,9 @@ let demo () =
   //
   async {
     while true do
-      do! Async.sleep 1000      
-      Section1.light.style.backgroundColor <- "green"
-      do! Async.sleep 1000
-      Section1.light.style.backgroundColor <- "orange"
-      do! Async.sleep 1000
-      Section1.light.style.backgroundColor <- "red" } 
+      for color in ["green"; "orange"; "red"] do
+        do! Async.awaitEvent Section1.light "click" // note this keeps adding new event listeners
+        window.alert("yo!")
+        Section1.light.style.backgroundColor <- color
+  } 
   |> Async.start

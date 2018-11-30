@@ -28,7 +28,7 @@ open System.Collections.Generic
 // TASK #4: Implement 'Async.awaitEvent' and modify the traffic light
 // so that it advances on click, rather than automatically.
 
-// UNCOMMENT: AsyncReactive.Async.demo ()
+//AsyncReactive.Async.demo ()
 
 // ------------------------------------------------------------------
 // PART #2: Reactive programming with Observables
@@ -38,19 +38,19 @@ open System.Collections.Generic
 // the second demo - to make this work, you will need to implement
 // the `merge` combinator for observables (see comments in `2-observables.fs`)
 
-// UNCOMMENT:  AsyncReactive.Observables.demo1 ()
-// UNCOMMENT:  AsyncReactive.Observables.demo2 ()
+//AsyncReactive.Observables.demo1 ()
+// AsyncReactive.Observables.demo2 ()
 
 // TASK #2: When you create an observable and subscribe to it, you get
 // back a function that can be used to cancel the subscription. Have a
 // look at 'demo3' to see how this can be used!
 
-// UNCOMMENT:  AsyncReactive.Observables.demo3 ()
+//AsyncReactive.Observables.demo3 ()
 
 // TASK #3: Implement a slot machine simulator! Have a look at the 'demo4'
 // function in '2-observables.fs' and follow the instructions there..
 
-// UNCOMMENT:  AsyncReactive.Observables.demo4 ()
+AsyncReactive.Observables.demo4 ()
 
 // ------------------------------------------------------------------
 // PART #3: Asynchronous sequences for async pull streams
